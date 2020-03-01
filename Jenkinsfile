@@ -49,13 +49,5 @@ pipeline {
                 )
             }
         }
-		stage('Smoke Test') {
-			steps {
-				script {
-						sh "sleep 10"
-						sh "curl -s -o /dev/null -D - 0.0.0.0:8082"
-					}
-				}
-			}		
     }
 }
