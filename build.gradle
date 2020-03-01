@@ -1,7 +1,8 @@
 plugins {
-  //inlude the nodeJS plugin to execute nodejs and npm tasks
-  id "com.moowork.node" version "1.2.0"
+   id "com.github.node-gradle.gulp" version "1.3.0"
 }
+
+apply plugin: 'com.github.node-gradle.gulp'
 
 node {
 	download = true
@@ -14,6 +15,8 @@ task build
 
 //declare a task to create a zip of the app
 task zip(type: Zip) {
+	destinationDirectory = file("dist")
+	archiveBaseName = "trainSchedule"
 	from ('.') {
 		include "*"
 		include "bin/**"
@@ -23,8 +26,6 @@ task zip(type: Zip) {
 		include "routes/**"
 		include "views/**"
 	}
-	destinationDir(file("dist"))
-	baseName "trainSchedule"
 }
 
 //declare task dependencies

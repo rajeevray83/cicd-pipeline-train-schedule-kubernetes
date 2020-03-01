@@ -1,8 +1,13 @@
 pipeline {
     agent any
+	parameters {
+		string(name: 'prod_ip',
+			defaultValue: '127.0.0.1',
+			description: 'ip address of host server to deploy container to')
+	}	
     environment {
-        //be sure to replace "willbla" with your own Docker Hub username
-        DOCKER_IMAGE_NAME = "willbla/train-schedule"
+        //be sure to replace "ianp5uk" with your own Docker Hub username
+        DOCKER_IMAGE_NAME = "ianp5uk/train-schedule"
     }
     stages {
         stage('Build') {
@@ -19,9 +24,6 @@ pipeline {
             steps {
                 script {
                     app = docker.build(DOCKER_IMAGE_NAME)
-                    app.inside {
-                        sh 'echo Hello, World!'
-                    }
                 }
             }
         }
@@ -45,8 +47,20 @@ pipeline {
             steps {
                 input 'Deploy to Production?'
                 milestone(1)
-                //implement Kubernetes deployment here
+                kubernetesDeploy(
+                    kubeconfigId: 'kubeconfig',
+                    configs: 'train-schedule-kube.yml',
+                    enableConfigSubstitution: true
+                )
             }
         }
+		stage('Smoke Test') {
+			steps {
+				script {
+						sh "sleep 10"
+						sh "curl -s -o /dev/null -D - 0.0.0.0:8082"
+					}
+				}
+			}		
     }
 }
