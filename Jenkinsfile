@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    environment {
+        //be sure to replace "ianp5uk" with your own Docker Hub username
+        DOCKER_IMAGE_NAME = "ianp5uk/train-schedule"
+    }
     stages {
         stage('Build') {
             steps {
@@ -14,10 +18,7 @@ pipeline {
             }
             steps {
                 script {
-                    app = docker.build("pradhans0906/train-schedule")
-                    app.inside {
-                        sh 'echo $(curl localhost:8080)'
-                    }
+                    app = docker.build(DOCKER_IMAGE_NAME)
                 }
             }
         }
@@ -41,8 +42,7 @@ pipeline {
             steps {
                 input 'Deploy to Production?'
                 milestone(1)
-                echo "deploy in k8 or through compose"
-                )
+                echo 'k8 or do docker-compose up'
             }
         }
     }
