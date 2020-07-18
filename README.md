@@ -19,4 +19,4 @@ Once it is running, you can access it in a browser at http://localhost:8080
 It runs on a nodePort on 8080 which is not available by default. Thus it requires modification
 of the manifest (config file) /etc/kubernetes/manifests/kube-apiserver.yaml to contain the line '- --service-node-port-range=8080-32767'
 
-##added githook
+##added 
